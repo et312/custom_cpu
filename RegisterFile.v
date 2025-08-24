@@ -1,29 +1,28 @@
-module RegisterFile (clk, write_en, write_reg, write_data, read_reg1, read_reg2, read_data1, read_data2);
+module RegisterFile (clk, wen0, wen1, waddr0, waddr1, wdata0, wdata1, raddr0, raddr1, rdata0, rdata1);
 	`include "define.vh"
 	
 	input wire clk;
-	input wire write_en;
-	input wire [REG_BITS-1:0] write_reg;
-	input wire [WORD_SIZE-1:0] write_data;
-	input wire [REG_BITS-1:0] read_reg1;
-	input wire [REG_BITS-1:0] read_reg2;
-	output wire [WORD_SIZE-1:0] read_data1;
-	output wire [WORD_SIZE-1:0] read_data2;
+	input wire wen0, wen1;
+	input wire [REG_ADDRW-1:0] waddr0, waddr1;
+	input wire [WORD_SIZE-1:0] wdata0, wdata1;
+	input wire [REG_ADDRW-1:0] raddr0, raddr1;
+	output [WORD_SIZE-1:0] rdata0, rdata1;
 	
-	reg [WORD_SIZE-1:0] regs[0:2**REG_BITS-1];
-	
-	integer i;
-	initial begin
-		for (i = 0; i < 2**REG_BITS-1; i=i+1) regs[i] = 16'b0;
-	end 
+	reg [WORD_SIZE-1:0] mem [0:REG_DEPTH-1];
+	reg [WORD_SIZE-1:0] r_rdata0, r_rdata1;
 	
 	always @(posedge clk) begin
-		if (write_en) begin
-			regs[write_reg] <= write_data;
+		if (wen0) begin
+			mem[waddr0] <= wdata0;
 		end
+		if (wen1) begin
+			mem[waddr1] <= wdata1;
+		end
+		
+		r_rdata0 <= mem[raddr0];
+		r_rdata1 <= mem[raddr1];
 	end
 	
-	assign read_data1 = regs[read_reg1];
-	assign read_data2 = regs[read_reg2];
-	
+	assign rdata0 = r_rdata0;
+	assign rdata1 = r_rdata1;
 endmodule

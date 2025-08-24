@@ -2,3 +2,7 @@
 /output_files
 /simulation
 /db
+
+*.bak
+*.qsf
+*.rpt
