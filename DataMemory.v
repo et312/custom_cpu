@@ -1,23 +1,23 @@
-module DataMemory(clk, write_en, read_en, addr, write_data, read_data);
+module DataMemory(clk, wen, waddr, wdata, raddr, rdata);
 	`include "define.vh"
 	
 	input wire clk;
-	input wire write_en, read_en;
-	input wire [MEM_ADDR_BITS-1:0] addr;
-	input wire [WORD_SIZE-1:0] write_data;
-	output reg [WORD_SIZE-1:0] read_data;
+	input wire wen;
+	input wire [DMEM_ADDRW-1:0] waddr;
+	input wire [WORD_SIZE-1:0] wdata;
+	input wire [DMEM_ADDRW-1:0] raddr;
+	output [WORD_SIZE-1:0] rdata;
 	
-	reg [WORD_SIZE-1:0] memory [0:2**MEM_ADDR_BITS-1];
-	
-	// memory[0:15] reserved for register data
+	reg [WORD_SIZE-1:0] mem [0:DMEM_DEPTH-1];
+	reg [WORD_SIZE-1:0] r_rdata;
 	
 	always @(posedge clk) begin
-		if (write_en) begin
-			memory[addr] <= write_data;
+		if (wen) begin
+			mem[waddr] <= wdata;
 		end
-		if (read_en) begin
-			read_data <= memory[addr];
-		end
+		
+		r_rdata <= mem[raddr];
 	end
-
+	
+	assign rdata = r_rdata;
 endmodule
