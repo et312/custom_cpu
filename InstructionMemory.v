@@ -1,7 +1,7 @@
 module InstructionMemory(clk, pc, instr);
 	`include "define.vh"
 	input wire clk;
-	input wire [WORD_SIZE-1:0] pc;
+	input wire [INSTR_ADDRW-1:0] pc;
 	output reg [INSTR_SIZE-1:0] instr;
 	
 	reg [INSTR_SIZE-1:0] rom [0:INSTR_DEPTH-1];

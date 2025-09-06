@@ -70,7 +70,6 @@ module ALU(clk, rst, en, in1, reg_in2, imm_in2, ALUSrc, result, zero, overflow);
 				4'b1101: result <= (in1 == 'b0) ? 1'b1 : 1'b0;
 				default: result <= result;
 			endcase
-			zero <= !result;
 			end
 		end
 	end
